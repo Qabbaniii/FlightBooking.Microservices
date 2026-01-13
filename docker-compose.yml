@@ -1,0 +1,81 @@
+services:
+  auth-api:
+    build:
+      context: ./AuthService
+      dockerfile: AuthService.API/Dockerfile
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=AuthDb;User Id=sa;Password=P@ssw0rd123;TrustServerCertificate=True;
+      - Redis__Connection=redis:6379
+
+  booking-api:
+    build:
+      context: ./BookingService
+      dockerfile: BookingService.API/Dockerfile
+    ports:
+      - "5001:80"
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=BookingDb;User Id=sa;Password=P@ssw0rd123;TrustServerCertificate=True;
+      - Redis__Connection=redis:6379
+
+  flightsearch-api:
+    build:
+      context: ./FlightSearchService
+      dockerfile: FlightSearchService.API/Dockerfile
+    ports:
+      - "5002:80"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - ConnectionStrings__FlightDb=Server=db;Database=FlightDb;User Id=sa;Password=P@ssw0rd123;TrustServerCertificate=True;
+      - Redis__Connection=redis:6379
+
+  bookingprocessor-api:
+    build:
+      context: ./BookingProcessorService
+      dockerfile: BookingProcessorService.API/Dockerfile
+    ports:
+      - "5003:80"
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      - ConnectionStrings__Booking=Server=db;Database=BookingDb;User Id=sa;Password=P@ssw0rd123;TrustServerCertificate=True;
+      - Redis__Connection=redis:6379
+
+  mock-supplier-api:
+    build:
+      context: ./MockExternalSupplier
+      dockerfile: MockExternalSupplier.API/Dockerfile
+    ports:
+      - "5004:80"
+
+  # SQL Server
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "P@ssw0rd123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+
+  # Redis
+  redis:
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+
+  # RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
