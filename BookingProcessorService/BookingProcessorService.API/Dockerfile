@@ -13,7 +13,6 @@ COPY ["BookingProcessorService/BookingProcessorService.API/BookingProcessorServi
 
 RUN dotnet restore "BookingProcessorService/BookingProcessorService.API/BookingProcessorService.API.csproj"
 
-
 COPY . .
 
 WORKDIR "/src/BookingProcessorService/BookingProcessorService.API"
