@@ -170,8 +170,5 @@ https://localhost:{port}/swagger
 ## Future Improvements
 
 - Add API Gateway
-- Add distributed logging (Serilog + Seq)
-- Add monitoring (Prometheus / Grafana)
-- Implement Saga pattern for booking flow
 - Add unit & integration tests
 - Docker & Docker Compose support
